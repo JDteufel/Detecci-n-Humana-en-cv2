@@ -73,8 +73,10 @@ def detectByCamera(writer):
 def detectByPathImage(path, output_path):
 
     """ Reads Image file """
+
+
     
-    image = cv2.imread(path)
+    image = cv2.imread('family_cv.jpg')
 
     image = imutils.resize(image, width = min(800, image.shape[1])) 
 
