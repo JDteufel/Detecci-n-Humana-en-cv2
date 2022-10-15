@@ -120,59 +120,18 @@ if __name__ == "__main__":
         print("Image Path: ", args['video'])
         
         writer = None
-        if args["output"] != "" and args["output"] is not None:# checking output option
-            fourcc = cv2.VideoWriter_fourcc(*"MJPG") #Why am I writing output in MJPG?
-            writer = cv2.VideoWriter(args["output"], fourcc, 25, # if only video frame as an output then fourcc, 25, 640,360  - no height or width - is specified
-            (frame.shape[1], frame.shape[0]), True) 
-    
-        if args['image'] is not None:
-            detectByPathImg(args['image']) 
-    
-        if args['video'] is not None:
-            detectByPathVideo(args['video'], writer) #pass video along with the path variable
- 
-"""
+        if args["output"] != "" and args["output"] is not None: # if the output file is set from the command line flags we'll configure the writer to write the processed video  frame to disk.
 
-More maintainable code
-
-Seperation of responsibilities makes it easier to change behavior because only one class/method will need to be changed. It’s also easier to debug when large parts of functionality are separated into different units. Just think about past projects where you may have been confused about how code worked, you were able to work around it by hacking at some variables or function calls.
-
-Having total control over how components interact by providing the interface not inheriting it from a base class is important. You will likely change something and the order in which code is executed for subclasses of a given superclass will most likely change. This can have chain reactions with other class functionality. By expecting certain parameters, classes you are using do not need to have any relation to each other, thus freeing up the program.
-
-Make your class super powers useful
-
-We can’t possibly determine every situation that a class might be used for. Thankfully, this is where class inheritance
-    
-    extends by default java comes with features like interface, inheritance,
-    abstraction, polymorphism in terms of features. But through inheritance we can achieve the capability of interfaces and abstract methods.
-    
-    Compile time polymorphism - method overloading
-    
-
-    """
-    Overloading : Type -1: changing num of args, Type-2 : type of args, Type:3: sequence of args
-
-
-    # Type -1: Default values
-    def add (a ,b ,c =0):
-        return a+b,c
-
-    print(add(1,2)) # add(1,2) will mean that all the value without name has been given the value here(a,b and c=0)
-    print(add(3,3,3))# add(3,3,3) will mean that 2 parameter has been given a ,b, and c=3)
-    print(add(a=3,b=2,c=5))# if you know the name of parameter you can also give a ,b ,c value
-
-    # # Type-2: Keyword Args
-    def personDetails(Name,Age,Calss= None): # first declare the variable whose value is changed the most.Last value is assigned
-        return Name, Age, Calss
-        if Calss == null:
-            Calss = None
-            return Name, Age, Calss
+            writer = cv2.VideoWriter(args["output"], cv2.VideoWriter_fourcc(*"MJPG"), 10,(600,600)) #we pass the path to the initialized video writer, the fourcc code to encode the files to the disk, the number of frames per second, and finally the dimensions of the frames
+        if args["video"] != "" and args["video"] is not None:
+            detectByPathVideo(args["video"], writer)
+        elif args["image"] != "" and args["image"] is not None:
+            detectByPathImg(args["image"])
         else:
-            return Name, Age,  Calss
-
-    print(personDetails(Age = 10, Name = 'Niraj'))
-    print(personDetails(Age= 12, Name = 'Raj', Calss = "10"))
-
-
-
+            ap.print_help()
+            sys.exit()
+        
     
+        print('[INFO] Cleaning up...')
+        writer.release()
+        cv2.destroyAllWindows() # Free/Memory management: close all the frames
