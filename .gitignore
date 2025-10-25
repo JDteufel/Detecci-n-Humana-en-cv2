@@ -1,0 +1,12 @@
+# Ignorar entorno virtual
+.venv/
+
+# Ignorar archivos de Python temporales
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignorar logs o datos temporales
+*.log
+/data/
