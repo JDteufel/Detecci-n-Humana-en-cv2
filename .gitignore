@@ -9,4 +9,4 @@ __pycache__/
 
 # Ignorar logs o datos temporales
 *.log
-/data/
+data/*
