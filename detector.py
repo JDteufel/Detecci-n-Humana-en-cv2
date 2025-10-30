@@ -2,15 +2,28 @@ import cv2
 import mediapipe as mp
 
 mp_pose = mp.solutions.pose
-pose = mp_pose.Pose()
-mp_draw = mp.solutions.drawing_utils
+mp_drawing = mp.solutions.drawing_utils
 
 def detectar_persona(frame):
-    """Detecta persona en el frame usando MediaPipe Pose"""
-    rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    results = pose.process(rgb)
-    
-    if results.pose_landmarks:
-        mp_draw.draw_landmarks(frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
-        return True, frame
-    return False, frame
+    with mp_pose.Pose(
+        model_complexity=1,
+        min_detection_confidence=0.5,
+        min_tracking_confidence=0.5
+    ) as pose:
+
+        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        result = pose.process(frame_rgb)
+
+        detectado = False
+
+        if result.pose_landmarks:
+            detectado = True
+            mp_drawing.draw_landmarks(
+                frame,
+                result.pose_landmarks,
+                mp_pose.POSE_CONNECTIONS,
+                mp_drawing.DrawingSpec(thickness=2),
+                mp_drawing.DrawingSpec(thickness=2)
+            )
+
+        return detectado, frame
